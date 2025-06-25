@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--这里的namespace要跟Mapper的类的命名空间一致，并且该xml所在目录要与Mapper类的路径保持一致-->
+<mapper namespace="com.demoapp.mapper.KnowledgeBaseMapper">
+    <select id="findById">
+        select *
+        from knowledge_base
+        where id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO knowledge_base
+            (id, name, description, `type`, creator_id, create_time)
+        VALUES (#{id}, #{name}, #{description}, #{type}, #{creator_id}, NOW());
+    </insert>
+
+    <update id="update">
+        UPDATE knowledge_base
+        set name=#{name},
+            type=#{type},
+            description=#{description},
+            update_time=NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM knowledge_base
+        WHERE id =
+              #{id}
+    </delete>
+
+    <select id="page">
+        select * from knowledge_base
+        <where>
+            <if test="name!=null and name !=''">
+                AND name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="description != null and description != ''">
+                AND description LIKE CONCAT('%', #{description}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>
